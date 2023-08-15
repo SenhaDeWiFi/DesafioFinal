@@ -25,44 +25,19 @@ const listaDeTurmas = [
 
 const listaDeAlunos = [ 
     {
-        nome: "joao",
-        sobrenome: "silva",
-        email : "joaosilva@email.com",
-        turma : 3,
-        nascimento : "22/04/2003",
-        notas : [2, 3, 4, 5, 4]
+        nome: "joao", sobrenome: "silva",  email : "joaosilva@email.com", turma : 3, nascimento : "22/04/2003", notas : [2, 3, 4, 5, 4]
     },
     {
-        nome: "mateus",
-        sobrenome: "canella",
-        email : "mateuscanella@email.com",
-        turma : 2,
-        nascimento : "10/03/2000",
-        notas : [7, 7, 5, 7, 7]
+        nome: "mateus", sobrenome: "canella", email : "mateuscanella@email.com",turma : 2, nascimento : "10/03/2000",notas : [7, 7, 5, 7, 7]
     },
     {
-        nome: "lucas",
-        sobrenome: "vinicius",
-        email : "lucasvinicius@email.com",
-        turma : 2,
-        nascimento : "10/10/2000",
-        notas : [8, 7, 5, 5, 6]
+        nome: "lucas",  sobrenome: "vinicius", email : "lucasvinicius@email.com", turma : 2, nascimento : "10/10/2000", notas : [8, 7, 5, 5, 6]
     },
     {
-        nome: "joao",
-        sobrenome: "silva",
-        email : "joaosilva01@email.com",
-        turma : 1,
-        nascimento : "21/05/2004",
-        notas : [2, 3, 4, 5, 4]
+        nome: "joao",  sobrenome: "silva", email : "joaosilva01@email.com",  turma : 1, nascimento : "21/05/2004",notas : [2, 3, 4, 5, 4]
     },
     {
-        nome: "mike",
-        sobrenome: "wazowski",
-        email : "monstrosSA@email.com",
-        turma : 3,
-        nascimento : "19/08/1998",
-        notas : [8, 9, 7, 4, 9]
+        nome: "mike", sobrenome: "wazowski", email : "monstrosSA@email.com",turma : 3, nascimento : "19/08/1998", notas : [8, 9, 7, 4, 9]
     }
 ]
 
@@ -83,7 +58,8 @@ function cadastrarTurma(codigo, maximo){
 
     if (turmas.find(turma => turma.codigo == codigo)) {
         console.log("Código de turma já em uso.")
-    }else turmas.push({codigo, maximo})
+    }else {
+        turmas.push({codigo, maximo})}
 }
 
 // Cadastro de aluno
@@ -94,10 +70,14 @@ function cadastrarAluno(nome, sobrenome, email, turma, nascimento, notas){
     sobrenome = sobrenome[0].toUpperCase() + sobrenome.slice(1)
     
     let ativo = true
-
     if (turmas.find(curr => curr.codigo == parseInt(turma))) {
-    }else throw new Error("Turma inválida!")
-
+        if (turmaCheia(turma)) {
+            throw new Error("Turma cheia!")
+        }
+    }else{
+        console.log(turma)
+        throw new Error("Turma inválida!")
+    }
     if (notas.length > 5 || notas.length < 1) {
         throw new Error("Insira um número de notas válido")
     }
@@ -114,6 +94,13 @@ function cadastrarAluno(nome, sobrenome, email, turma, nascimento, notas){
     if (alunos.find(aluno => aluno.email == email)) {
         throw new Error("Aluno já cadastrado.")
     }else alunos.push({nome, sobrenome, email, turma, nascimento, notas, ativo})
+}
+
+// Retorna true caso uma turma já esteja cheia
+function turmaCheia(codigo){
+    const turmAlvo = turmas.find(turma => turma.codigo == codigo)
+    let numAlunos = (alunos.filter(aluno => aluno.turma == codigo)).length
+    return numAlunos == turmAlvo.maximo
 }
 
 // Retorna a média do aluno-alvo
@@ -148,8 +135,14 @@ function atualizarAluno(emailAlunoAlvo, nome, sobrenome, email, turma, nasciment
     cadastrarAluno(nome, sobrenome, email, turma, nascimento, notas )
 }
 
-// Retorna todos os alunos
-function retornarAlunos(){return alunos}
+// Retorna todos os alunos de uma turma-alvo
+function retornarAlunos(turmaAlvo){
+    const relacao = {
+        alunos : alunos.filter(aluno => aluno.turma == turmaAlvo),
+        turma : turmas.find(turma => turma.codigo == turmaAlvo)
+    }
+    return relacao
+}
 
 // Retorna a quantidade de turmas
 function retornarQtdTurmas(){return turmas.length}
